@@ -85,6 +85,24 @@ Skill 会引导你完成五个阶段，每轮生成报告并等待确认。
 5. **Phase 3/4 分离** — 融合阶段用标准 MD，Obsidian 语法在 Phase 4 统一转换
 6. **知识库是活的** — Phase 5 提供查询、质量检查和增量更新
 
+## 包含的 Skill
+
+本仓库包含完整工具链，共 9 个 Reasonix Skill：
+
+| Skill 文件 | 用途 | 对应流水线阶段 |
+|-----------|------|:---:|
+| `llm-wiki-pipeline.md` | 🏭 **知识工厂总入口** — 五阶段端到端流水线 | 全部 |
+| `skills/knowledge-cleanup.md` | 🔍 五轮递进查重清理 | Phase 1 |
+| `skills/everything-markdown.md` | 📄 15+ 格式 → Markdown（markitdown） | Phase 2 |
+| `skills/defuddle.md` | 🧹 网页内容清洗 → 干净 Markdown | Phase 2 |
+| `skills/karpathy-llm-wiki.md` | 🧠 LLM 理解融合 + 索引/日志管理 | Phase 3, 5 |
+| `skills/obsidian-markdown.md` | 📝 Obsidian Flavored Markdown 语法 | Phase 4 |
+| `skills/obsidian-bases.md` | 🗃️ Obsidian Bases 数据库视图 | Phase 4 |
+| `skills/json-canvas.md` | 🎨 JSON Canvas 知识图谱 | Phase 4 |
+| `skills/obsidian-cli.md` | 🖥️ Obsidian CLI 批量操作 | Phase 4 |
+
+每个 Skill 均可独立使用，也可通过 `llm-wiki-pipeline` 串联执行。
+
 ## 集成工具
 
 本 Skill 整合了以下开源工具和方法论：

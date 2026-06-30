@@ -1,118 +1,177 @@
-# LLM WIKI Pipeline — 知识工厂
+# LLM Wiki Pipeline - 知识工厂
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![GitHub Stars](https://img.shields.io/github/stars/CS-Faith/llm-wiki-pipeline?style=social)](https://github.com/CS-Faith/llm-wiki-pipeline/stargazers)
+[![GitHub Issues](https://img.shields.io/github/issues/CS-Faith/llm-wiki-pipeline)](https://github.com/CS-Faith/llm-wiki-pipeline/issues)
 
-**Reasonix Skill** — 端到端知识库构建流水线。以 LLM 为引擎，将杂乱原始材料转化为 Obsidian 最佳范式知识库。
+**端到端知识库构建流水线** - 从原始文件到结构化知识库的完整自动化解决方案
 
-> 核心理念来自 Andrej Karpathy 的 LLM WIKI：「LLM 负责编写和维护知识库，人类负责阅读和提问。」
+---
+## 🏭 知识工厂 Skill 矩阵
 
-## 五阶段流水线
+### 核心 Skill 组件
+
+| Skill | 类型 | 功能描述 | 输入 | 输出 | 依赖 |
+|-------|------|----------|------|------|------|
+| **knowledge-cleanup** | 📁 文件处理 | 五轮递进式文件去重与整理 | 原始文件目录 | 清理后文件目录 | Python 3.8+ |
+| **everything-markdown** | 📄 格式转换 | 所有文档转Markdown格式 | 各种文档格式 | Markdown文件 | Python |
+| **defuddle** | 🧹 内容清理 | 内容去重、去噪、标准化 | Markdown文件 | 标准化Markdown | Python |
+| **karpathy-llm-wiki** | 🧠 LLM理解 | LLM驱动的内容理解与融合 | Markdown文件 | 语义增强文件 | LLM API |
+| **obsidian-markdown** | ✍️ 格式优化 | Obsidian友好格式转换 | 标准Markdown | Obsidian格式 | Python |
+| **json-canvas** | 🎨 可视化 | 知识图谱可视化生成 | 结构化数据 | JSON Canvas | Python |
+| **obsidian-cli** | 💻 CLI工具 | Obsidian命令行管理 | Obsidian文件 | 管理操作 | Node.js |
+| **obsidian-bases** | 📚 基础模板 | Obsidian知识库模板 | 空知识库 | 预配置知识库 | Obsidian |
+### Skill 功能详解
+
+#### 📁 knowledge-cleanup
+**文件去重与整理**
+- **R1**: MD5完全重复检测 - 字节级相同文件去重
+- **R2**: 文件名相似度 - 版本链自动识别
+- **R3**: 激进归一化 - 隐式版本发现
+- **R4**: 压缩包检测 - 安全删除已解压文件
+- **R5**: 目录重组 - 项目/管理二层结构
+- **特点**: 安全备份，支持回滚，用户确认机制
+
+#### 📄 everything-markdown
+**全格式转Markdown**
+- 支持Word、PDF、Excel、PPT等多种格式
+- 保持原始内容结构和格式
+- 自动处理表格、图片、公式
+- 生成标准的Markdown文件
+
+#### 🧹 defuddle
+**内容清理与标准化**
+- 去除重复内容
+- 标准化文本格式
+- 清理无用信息
+- 统一编码和样式
+
+#### 🧠 karpathy-llm-wiki
+**LLM驱动的内容理解**
+- 语义分析和理解
+- 内容融合和关联
+- 自动生成摘要和标签
+- 智能分类和组织
+#### ✍️ obsidian-markdown
+**Obsidian格式优化**
+- 添加Obsidian特有语法
+- 优化文件命名和组织
+- 生成YAML前置元数据
+- 兼容Obsidian插件生态
+
+#### 🎨 json-canvas
+**知识图谱可视化**
+- 生成交互式知识图谱
+- 可视化文件间的关系
+- 支持多种布局方式
+- 导出为JSON Canvas格式
+
+#### 💻 obsidian-cli
+**Obsidian命令行工具**
+- 批量处理Obsidian文件
+- 自动化知识库管理
+- 快速搜索和替换
+- 与Git集成
+
+#### 📚 obsidian-bases
+**Obsidian知识库模板**
+- 预配置的知识库结构
+- 包含常用插件配置
+- 示例笔记和模板
+- 快速上手指南
+
+---
+## 🚀 流水线工作流程
+
+### 端到端自动化流程
 
 ```
-杂乱原始材料（任意格式）
-  │
-  ├─ Phase 1: 查重清理 ──── MD5→版本链→归一化→压缩包→目录重组
-  ├─ Phase 2: 获取与转换 ── markitdown + defuddle → 统一 MD
-  ├─ Phase 3: LLM 理解融合 ── 阅读→理解→融合多源→结构化文章
-  ├─ Phase 4: Obsidian 化 ── Wikilinks/Callouts/Properties/Base/Canvas
-  └─ Phase 5: 持续维护 ──── Query + Lint + 增量更新
+原始文件目录
+       ↓
+┌─────────────────┐
+│ knowledge-cleanup │ ← 五轮清理：去重、版本链、归一化、压缩包、目录重组
+└─────────────────┘
+       ↓
+清理后文件目录
+       ↓
+┌─────────────────────┐
+│ everything-markdown │ ← 全格式转换：Word/PDF/Excel/PPT → Markdown
+└─────────────────────┘
+       ↓
+Markdown文件集合
+       ↓
+┌─────────────────┐
+│ defuddle        │ ← 内容清理：去重、去噪、标准化
+└─────────────────┘
+       ↓
+标准化Markdown文件
+       ↓
+┌─────────────────────┐
+│ karpathy-llm-wiki │ ← LLM理解：语义分析、内容融合、智能分类
+└─────────────────────┘
+       ↓
+语义增强文件
+       ↓
+┌─────────────────────┐
+│ obsidian-markdown │ ← 格式优化：Obsidian语法、YAML元数据
+└─────────────────────┘
+       ↓
+Obsidian友好文件
+       ↓
+┌─────────────────┐
+│ json-canvas     │ ← 可视化：生成知识图谱
+└─────────────────┘
+       ↓
+知识图谱 + 结构化文件
+       ↓
+┌─────────────────┐
+│ obsidian-bases  │ ← 模板应用：预配置知识库结构
+└─────────────────┘
+       ↓
+📁 最终知识库 (Obsidian格式)
 ```
+## 🎯 核心价值
 
-| 阶段 | 做什么 | 用什么 |
-|------|--------|--------|
-| **Phase 1** 查重清理 | 五轮递进去重：MD5 完全重复 → 文件名版本链 → 激进归一化 → 压缩包清理 → 目录结构重组 | Python 脚本 |
-| **Phase 2** 获取与转换 | 本地文件（PDF/DOCX/PPTX/XLSX/HTML/图片/音频 等 15+ 格式）→ Markdown；网页抓取 → 干净 Markdown | [markitdown](https://github.com/microsoft/markitdown) + [defuddle](https://github.com/kepano/defuddle) |
-| **Phase 3** LLM 理解融合 | 阅读所有 MD → 理解内容 → 融合多源知识 → 重组为结构化文章 → 更新索引和日志 | LLM Agent |
-| **Phase 4** Obsidian 化 | 标准 MD → Obsidian Flavored Markdown（wikilinks/callouts/tags）+ Base 数据库视图 + Canvas 知识图谱 | Obsidian 原生格式 |
-| **Phase 5** 持续维护 | 语义查询、质量检查（自动修复 + 启发式报告）、增量更新 | LLM Agent |
+### 为什么选择LLM Wiki Pipeline？
 
-## 快速开始
+#### 📁 文件管理痛点
+- **文件堆积**: 数千文件散落在嵌套目录中
+- **版本混乱**: 同一文档存在多个版本（V1、V2、最终版...）
+- **格式混乱**: Word、PDF、Excel、PPT等格式混杂
+- **内容重复**: 大量重复和冗余内容
+- **组织混乱**: 缺乏统一的组织结构
+
+#### 🤖 AI驱动的解决方案
+- **自动化**: 端到端自动化处理，无需人工干预
+- **智能化**: LLM驱动的内容理解和融合
+- **标准化**: 统一的Markdown和Obsidian格式
+- **可视化**: 知识图谱可视化展示
+- **可维护**: 持续维护和更新机制
+
+---
+
+## 🚀 快速开始
+
+### 前置要求
+- **Python 3.8+** - 推荐Python 3.10+
+- **Node.js** - 用于obsidian-cli（可选）
+- **Obsidian** - 用于最终知识库管理（可选）
+- **LLM API** - 用于karpathy-llm-wiki（可选）
 
 ### 安装
-
 ```bash
-# 安装 Skill 到 Reasonix
-# 将 llm-wiki-pipeline.md 复制到 .reasonix/skills/ 目录
-
-# 安装依赖工具
-pip install "markitdown[pdf,docx,xlsx,pptx]>=0.1.5"
-npm install -g defuddle
+git clone https://github.com/CS-Faith/llm-wiki-pipeline.git
+cd llm-wiki-pipeline
+pip install -r requirements.txt
 ```
 
-### 使用
+---
 
-在 Reasonix 对话中：
+## 📜 许可证
+MIT License - 详见 [LICENSE](LICENSE) 文件。
 
-```
-/ skill llm-wiki-pipeline
-帮我把 ~/Documents/work-archive/ 整理成知识库
-```
-
-Skill 会引导你完成五个阶段，每轮生成报告并等待确认。
-
-### 配置
-
-首次使用前确认三个路径：
-
-| 配置项 | 说明 |
-|--------|------|
-| `RAW_DIR` | 原始材料目录（只读，永不修改） |
-| `WIKI_DIR` | 知识库输出目录 |
-| `VAULT_DIR` | Obsidian Vault 路径（可选） |
-
-## 目录结构（最终产出）
-
-```
-<WIKI_DIR>/
-├── index.md                   ← 全局索引
-├── log.md                     ← 操作日志
-├── index.base                 ← Obsidian 多视图
-├── knowledge-graph.canvas     ← 知识图谱
-├── 01-主题A/
-│   ├── 文章1.md              ← 融合文章（Obsidian 格式）
-│   ├── 文章2.md
-│   └── _原始提取/             ← 转换件归档
-└── 02-主题B/
-    └── ...
-```
-
-## 设计原则
-
-1. **原始材料不可变** — 源目录只读，操作在副本中进行
-2. **多轮递进，逐轮确认** — 每轮聚焦一种重复模式，等用户确认后才继续
-3. **先移后备，不直接删除** — 所有清理操作移入 `_backup/`
-4. **转换 ≠ 完成** — markitdown 输出是原始 dump，必须经过 LLM 理解融合
-5. **Phase 3/4 分离** — 融合阶段用标准 MD，Obsidian 语法在 Phase 4 统一转换
-6. **知识库是活的** — Phase 5 提供查询、质量检查和增量更新
-
-## 包含的 Skill
-
-本仓库包含完整工具链，共 9 个 Reasonix Skill：
-
-| Skill 文件 | 用途 | 对应流水线阶段 |
-|-----------|------|:---:|
-| `llm-wiki-pipeline.md` | 🏭 **知识工厂总入口** — 五阶段端到端流水线 | 全部 |
-| `skills/knowledge-cleanup.md` | 🔍 五轮递进查重清理 | Phase 1 |
-| `skills/everything-markdown.md` | 📄 15+ 格式 → Markdown（markitdown） | Phase 2 |
-| `skills/defuddle.md` | 🧹 网页内容清洗 → 干净 Markdown | Phase 2 |
-| `skills/karpathy-llm-wiki.md` | 🧠 LLM 理解融合 + 索引/日志管理 | Phase 3, 5 |
-| `skills/obsidian-markdown.md` | 📝 Obsidian Flavored Markdown 语法 | Phase 4 |
-| `skills/obsidian-bases.md` | 🗃️ Obsidian Bases 数据库视图 | Phase 4 |
-| `skills/json-canvas.md` | 🎨 JSON Canvas 知识图谱 | Phase 4 |
-| `skills/obsidian-cli.md` | 🖥️ Obsidian CLI 批量操作 | Phase 4 |
-
-每个 Skill 均可独立使用，也可通过 `llm-wiki-pipeline` 串联执行。
-
-## 集成工具
-
-本 Skill 整合了以下开源工具和方法论：
-
-- [Microsoft MarkItDown](https://github.com/microsoft/markitdown) — 15+ 格式 → Markdown
-- [Defuddle](https://github.com/kepano/defuddle) — 网页内容清洗
-- [Obsidian Flavored Markdown](https://help.obsidian.md/obsidian-flavored-markdown) — wikilinks/callouts/tags
-- [Obsidian Bases](https://help.obsidian.md/bases) — 数据库视图
-- [JSON Canvas Spec](https://jsoncanvas.org/) — 知识图谱
-
-## License
-
-MIT
+## 📞 联系
+- GitHub: [CS-Faith](https://github.com/CS-Faith)
+- 仓库: [llm-wiki-pipeline](https://github.com/CS-Faith/llm-wiki-pipeline)
+- Issues: [GitHub Issues](https://github.com/CS-Faith/llm-wiki-pipeline/issues)

@@ -175,3 +175,15 @@ MIT License - 详见 [LICENSE](LICENSE) 文件。
 - GitHub: [CS-Faith](https://github.com/CS-Faith)
 - 仓库: [llm-wiki-pipeline](https://github.com/CS-Faith/llm-wiki-pipeline)
 - Issues: [GitHub Issues](https://github.com/CS-Faith/llm-wiki-pipeline/issues)
+
+
+---
+
+## 🔗 相关项目
+
+| 项目 | 描述 | 链接 |
+|------|------|------|
+| **reasonix-portakit** | 便携工具箱 | [CS-Faith/reasonix-portakit](https://github.com/CS-Faith/reasonix-portakit) |
+| **reasonix-migration-assistant** | 配置迁移升级助手 | [CS-Faith/reasonix-migration-assistant](https://github.com/CS-Faith/reasonix-migration-assistant) |
+| **knowledge-cleanup** | 知识库查重清理 | [CS-Faith/knowledge-cleanup](https://github.com/CS-Faith/knowledge-cleanup) |
+

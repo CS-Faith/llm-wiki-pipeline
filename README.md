@@ -1,189 +1,91 @@
 # LLM Wiki Pipeline - 知识工厂
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![GitHub Stars](https://img.shields.io/github/stars/CS-Faith/llm-wiki-pipeline?style=social)](https://github.com/CS-Faith/llm-wiki-pipeline/stargazers)
-[![GitHub Issues](https://img.shields.io/github/issues/CS-Faith/llm-wiki-pipeline)](https://github.com/CS-Faith/llm-wiki-pipeline/issues)
 
-**端到端知识库构建流水线** - 从原始文件到结构化知识库的完整自动化解决方案
-
----
-## 🏭 知识工厂 Skill 矩阵
-
-### 核心 Skill 组件
-
-| Skill | 类型 | 功能描述 | 输入 | 输出 | 依赖 |
-|-------|------|----------|------|------|------|
-| **knowledge-cleanup** | 📁 文件处理 | 五轮递进式文件去重与整理 | 原始文件目录 | 清理后文件目录 | Python 3.8+ |
-| **everything-markdown** | 📄 格式转换 | 所有文档转Markdown格式 | 各种文档格式 | Markdown文件 | Python |
-| **defuddle** | 🧹 内容清理 | 内容去重、去噪、标准化 | Markdown文件 | 标准化Markdown | Python |
-| **karpathy-llm-wiki** | 🧠 LLM理解 | LLM驱动的内容理解与融合 | Markdown文件 | 语义增强文件 | LLM API |
-| **obsidian-markdown** | ✍️ 格式优化 | Obsidian友好格式转换 | 标准Markdown | Obsidian格式 | Python |
-| **json-canvas** | 🎨 可视化 | 知识图谱可视化生成 | 结构化数据 | JSON Canvas | Python |
-| **obsidian-cli** | 💻 CLI工具 | Obsidian命令行管理 | Obsidian文件 | 管理操作 | Node.js |
-| **obsidian-bases** | 📚 基础模板 | Obsidian知识库模板 | 空知识库 | 预配置知识库 | Obsidian |
-### Skill 功能详解
-
-#### 📁 knowledge-cleanup
-**文件去重与整理**
-- **R1**: MD5完全重复检测 - 字节级相同文件去重
-- **R2**: 文件名相似度 - 版本链自动识别
-- **R3**: 激进归一化 - 隐式版本发现
-- **R4**: 压缩包检测 - 安全删除已解压文件
-- **R5**: 目录重组 - 项目/管理二层结构
-- **特点**: 安全备份，支持回滚，用户确认机制
-
-#### 📄 everything-markdown
-**全格式转Markdown**
-- 支持Word、PDF、Excel、PPT等多种格式
-- 保持原始内容结构和格式
-- 自动处理表格、图片、公式
-- 生成标准的Markdown文件
-
-#### 🧹 defuddle
-**内容清理与标准化**
-- 去除重复内容
-- 标准化文本格式
-- 清理无用信息
-- 统一编码和样式
-
-#### 🧠 karpathy-llm-wiki
-**LLM驱动的内容理解**
-- 语义分析和理解
-- 内容融合和关联
-- 自动生成摘要和标签
-- 智能分类和组织
-#### ✍️ obsidian-markdown
-**Obsidian格式优化**
-- 添加Obsidian特有语法
-- 优化文件命名和组织
-- 生成YAML前置元数据
-- 兼容Obsidian插件生态
-
-#### 🎨 json-canvas
-**知识图谱可视化**
-- 生成交互式知识图谱
-- 可视化文件间的关系
-- 支持多种布局方式
-- 导出为JSON Canvas格式
-
-#### 💻 obsidian-cli
-**Obsidian命令行工具**
-- 批量处理Obsidian文件
-- 自动化知识库管理
-- 快速搜索和替换
-- 与Git集成
-
-#### 📚 obsidian-bases
-**Obsidian知识库模板**
-- 预配置的知识库结构
-- 包含常用插件配置
-- 示例笔记和模板
-- 快速上手指南
+**端到端知识库构建流水线** — 从原始文件到结构化知识库的完整解决方案。核心理念来自 Karpathy LLM WIKI：**LLM 负责编写和维护知识库，人类负责阅读和提问。**
 
 ---
-## 🚀 流水线工作流程
 
-### 端到端自动化流程
+## 流水线架构
 
 ```
-原始文件目录
-       ↓
-┌─────────────────┐
-│ knowledge-cleanup │ ← 五轮清理：去重、版本链、归一化、压缩包、目录重组
-└─────────────────┘
-       ↓
-清理后文件目录
-       ↓
-┌─────────────────────┐
-│ everything-markdown │ ← 全格式转换：Word/PDF/Excel/PPT → Markdown
-└─────────────────────┘
-       ↓
-Markdown文件集合
-       ↓
-┌─────────────────┐
-│ defuddle        │ ← 内容清理：去重、去噪、标准化
-└─────────────────┘
-       ↓
-标准化Markdown文件
-       ↓
-┌─────────────────────┐
-│ karpathy-llm-wiki │ ← LLM理解：语义分析、内容融合、智能分类
-└─────────────────────┘
-       ↓
-语义增强文件
-       ↓
-┌─────────────────────┐
-│ obsidian-markdown │ ← 格式优化：Obsidian语法、YAML元数据
-└─────────────────────┘
-       ↓
-Obsidian友好文件
-       ↓
-┌─────────────────┐
-│ json-canvas     │ ← 可视化：生成知识图谱
-└─────────────────┘
-       ↓
-知识图谱 + 结构化文件
-       ↓
-┌─────────────────┐
-│ obsidian-bases  │ ← 模板应用：预配置知识库结构
-└─────────────────┘
-       ↓
-📁 最终知识库 (Obsidian格式)
+杂乱原始材料（任意格式）
+  │
+  ├─ Phase 1: 查重清理 —— 五轮递进：MD5→版本链→归一化→压缩包→目录重组
+  ├─ Phase 2: 获取与转换 —— 本地文件(markitdown) + 网页(defuddle) → 统一 MD
+  ├─ Phase 3A: 初步融合 —— 快速覆盖 → 项目概述（15-40%密度，建立全局索引）
+  ├─ Phase 3B: 深度知识 ⭐—— 圆桌讨论 → 逐子系统深度文章（70%密度，2-3万字/系统）
+  ├─ Phase 4: Obsidian 化 —— Frontmatter + Wikilinks + Callouts + Base + Canvas
+  └─ Phase 5: 持续维护 —— Query(查询) + Lint(质量检查) + 增量更新
 ```
-## 🎯 核心价值
-
-### 为什么选择LLM Wiki Pipeline？
-
-#### 📁 文件管理痛点
-- **文件堆积**: 数千文件散落在嵌套目录中
-- **版本混乱**: 同一文档存在多个版本（V1、V2、最终版...）
-- **格式混乱**: Word、PDF、Excel、PPT等格式混杂
-- **内容重复**: 大量重复和冗余内容
-- **组织混乱**: 缺乏统一的组织结构
-
-#### 🤖 AI驱动的解决方案
-- **自动化**: 端到端自动化处理，无需人工干预
-- **智能化**: LLM驱动的内容理解和融合
-- **标准化**: 统一的Markdown和Obsidian格式
-- **可视化**: 知识图谱可视化展示
-- **可维护**: 持续维护和更新机制
 
 ---
 
-## 🚀 快速开始
+## Phase 3B: 深度知识层（核心创新）
+
+### 什么是 70% 知识密度
+
+| 密度级别 | 表现 | 示例 |
+|---------|------|------|
+| 15-20%（命名层） | 列出文件名和一句话概述 | "某项目有 3 个 PDF" |
+| 40-50%（结构层） | 列出模块名称和功能描述 | "某系统有 5 个模块" |
+| **70%（知识层）** | 包含设计决策因果、数值参数、端到端流程、接口契约 | "为什么用 X 模型而不是 Y" |
+
+### S/A/B/C 四级质量标准
+
+| 级别 | 适用对象 | 硬指标 |
+|------|---------|--------|
+| **S 级**（核心技术系统） | 用户直接负责的核心业务系统 | >=3 设计决策因果 + >=5 数值参数 + >=1 端到端流程 + >=2 接口契约 + >=3000字 |
+| **A 级**（项目/业务系统） | 重要项目或业务系统 | 前 4 项硬指标 |
+| **B 级**（产品/方案类） | 产品原型、数据网关等 | >=2 设计决策 + >=1 业务流程 + >=1500字 |
+| **C 级**（小型/支撑项目） | 小型方案、外围支撑项目 | >=1 设计决策 + >=1500字 |
+
+### 关键原则
+
+- **粒度原则**：一个子系统 ≠ 一篇文章。S 级系统（50-70 源文件）→ 5-6 篇深度文章 → 2-3 万字
+- **双层结构**：深度文章是"理解层"（LLM 融合），原始文档是"参考层"（保留不替换）
+- **多 Agent 圆桌讨论**：写作前通过知识架构师+领域专家+执行专家+质量门神四方讨论确定方案
+
+---
+
+## Skill 矩阵
+
+| Skill | 类型 | 功能 |
+|-------|------|------|
+| **knowledge-cleanup** | 查重清理 | 五轮递进式文件去重（MD5→版本链→归一化→压缩包→目录重组） |
+| **everything-markdown** | 格式转换 | 15+ 格式→Markdown（PDF/DOCX/PPTX/XLSX/图片/音频/XMind） |
+| **defuddle** | 网页清洗 | 网页→干净 Markdown，去导航/广告/侧栏 |
+| **karpathy-llm-wiki** | LLM 理解 | 语义分析、内容融合、智能分类 |
+| **multi-agent-discuss** | 圆桌讨论 | 深度知识写作前的方案设计（Phase 3B 前置步骤） |
+| **obsidian-markdown** | Obsidian 格式 | Wikilinks/Callouts/Frontmatter 增强 |
+| **obsidian-bases** | 数据库视图 | 多视图浏览（表格/卡片/列表） |
+| **json-canvas** | 知识图谱 | 交互式知识关系可视化 |
+| **obsidian-cli** | CLI 工具 | Obsidian 批量管理 |
+
+---
+
+## 快速开始
 
 ### 前置要求
-- **Python 3.8+** - 推荐Python 3.10+
-- **Node.js** - 用于obsidian-cli（可选）
-- **Obsidian** - 用于最终知识库管理（可选）
-- **LLM API** - 用于karpathy-llm-wiki（可选）
+- Python 3.8+ / Node.js / Obsidian（可选）/ LLM API（用于 Phase 3B）
 
 ### 安装
 ```bash
 git clone https://github.com/CS-Faith/llm-wiki-pipeline.git
 cd llm-wiki-pipeline
-pip install -r requirements.txt
+pip install "markitdown[pdf,docx,xlsx,pptx]>=0.1.5"
+npm install -g defuddle
 ```
 
 ---
 
-## 📜 许可证
-MIT License - 详见 [LICENSE](LICENSE) 文件。
+## 许可证
+MIT License
 
-## 📞 联系
-- GitHub: [CS-Faith](https://github.com/CS-Faith)
-- 仓库: [llm-wiki-pipeline](https://github.com/CS-Faith/llm-wiki-pipeline)
-- Issues: [GitHub Issues](https://github.com/CS-Faith/llm-wiki-pipeline/issues)
-
-
----
-
-## 🔗 相关项目
+## 相关项目
 
 | 项目 | 描述 | 链接 |
 |------|------|------|
 | **reasonix-portakit** | 便携工具箱 | [CS-Faith/reasonix-portakit](https://github.com/CS-Faith/reasonix-portakit) |
-| **reasonix-migration-assistant** | 配置迁移升级助手 | [CS-Faith/reasonix-migration-assistant](https://github.com/CS-Faith/reasonix-migration-assistant) |
 | **knowledge-cleanup** | 知识库查重清理 | [CS-Faith/knowledge-cleanup](https://github.com/CS-Faith/knowledge-cleanup) |
-

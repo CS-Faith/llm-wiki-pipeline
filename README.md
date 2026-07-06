@@ -85,6 +85,14 @@ npm install -g defuddle
 ## 许可证
 MIT License
 
+## Next step
+
+Need to declutter first? → [knowledge-cleanup](https://github.com/CS-Faith/knowledge-cleanup)
+
+Multi-perspective AI discussions from chat history? → [conversation-council](https://github.com/CS-Faith/conversation-council)
+
+---
+
 ## 相关项目
 
 | 项目 | 描述 | 链接 |

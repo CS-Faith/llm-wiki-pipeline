@@ -1,5 +1,7 @@
 # LLM Wiki Pipeline - 知识工厂
 
+> **Raw documents don't become knowledge on their own.** llm-wiki-pipeline transforms messy files into a structured Obsidian knowledge graph — dedup, convert, fuse via LLM, and output ready-to-query notes.
+
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/CS-Faith/llm-wiki-pipeline?style=social)](https://github.com/CS-Faith/llm-wiki-pipeline/stargazers)
 

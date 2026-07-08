@@ -1,11 +1,42 @@
-# LLM Wiki Pipeline - 知识工厂
+﻿# LLM Wiki Pipeline - 知识工厂
 
-> **Raw documents don't become knowledge on their own.** llm-wiki-pipeline transforms messy files into a structured Obsidian knowledge graph — dedup, convert, fuse via LLM, and output ready-to-query notes.
+> 你有 50GB 的 PDF、Markdown、网页——它们不会自己变成知识。试过 Dataview 和 Obsidian 原生功能，它们能查询已有的笔记，但不能**理解内容、写出新笔记**。
+> LLM Wiki Pipeline 把 50GB 原始材料变成 70% 密度的 Obsidian 知识图谱。
 
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/CS-Faith/llm-wiki-pipeline?style=social)](https://github.com/CS-Faith/llm-wiki-pipeline/stargazers)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Reasonix](https://img.shields.io/badge/Reasonix-Ecosystem-58a6ff)](https://github.com/CS-Faith/reasonix-ecosystem)
 
-**端到端知识库构建流水线** — 从原始文件到结构化知识库的完整解决方案。核心理念来自 Karpathy LLM WIKI：**LLM 负责编写和维护知识库，人类负责阅读和提问。**
+---
+
+## 一句话定位
+
+| 输入 | 输出 |
+|------|------|
+| 50GB 杂乱原始文件（PDF/MD/网页） | 70% 密度的 Obsidian Wikilinks 知识图谱 |
+
+---
+
+## 为什么不是 Dataview + Obsidian 原生？
+
+| 能力 | Obsidian + Dataview | LLM Wiki Pipeline |
+|------|---------------------|-------------------|
+| 查询已有笔记 | ✅ | ✅ |
+| 从 0 写一篇深度文章 | ❌ | ✅（2-3 万字/系统） |
+| 理解「为什么用 X 不用 Y」 | ❌ | ✅（70% 密度） |
+| 多文档圆桌讨论 | ❌ | ✅（4 Agent 讨论） |
+| 持续增量更新 | 手动 | ✅ 自动检测变更 |
+
+---
+
+## 密度对比
+
+| 密度 | 表现 | 你现在的位置 |
+|------|------|-------------|
+| 15-20%（命名层） | 只列文件名和一句话描述 | ← 大多数人在这里 |
+| 40-50%（结构层） | 列模块名称和功能描述 | ← 少数认真的人 |
+| **70%（知识层）** | 设计决策因果、数值参数、接口契约、替代方案对比 | ← Pipeline 目标 |
+
+> **示例**：一篇 70% 密度的笔记会写「为什么选 Transformer 而不是 RNN：长序列任务中梯度消失问题在 200 token 后显著，实测 PPL 从 45 上升到 127」。
 
 ---
 
@@ -17,85 +48,44 @@
   ├─ Phase 1: 查重清理 —— 五轮递进：MD5→版本链→归一化→压缩包→目录重组
   ├─ Phase 2: 获取与转换 —— 本地文件(markitdown) + 网页(defuddle) → 统一 MD
   ├─ Phase 3A: 初步融合 —— 快速覆盖 → 项目概述（15-40%密度，建立全局索引）
-  ├─ Phase 3B: 深度知识 ⭐—— 圆桌讨论 → 逐子系统深度文章（70%密度，2-3万字/系统）
+  ├─ Phase 3B: 深度知识 —— 圆桌讨论 → 逐子系统深度文章（70%密度，2-3万字/系统）
   ├─ Phase 4: Obsidian 化 —— Frontmatter + Wikilinks + Callouts + Base + Canvas
-  └─ Phase 5: 持续维护 —— Query(查询) + Lint(质量检查) + 增量更新
+  └─ Phase 5: 持续维护 —— 智能检测新文件 + 仅处理变化部分（增量更新）
 ```
 
 ---
 
-## Phase 3B: 深度知识层（核心创新）
-
-### 什么是 70% 知识密度
-
-| 密度级别 | 表现 | 示例 |
-|---------|------|------|
-| 15-20%（命名层） | 列出文件名和一句话概述 | "某项目有 3 个 PDF" |
-| 40-50%（结构层） | 列出模块名称和功能描述 | "某系统有 5 个模块" |
-| **70%（知识层）** | 包含设计决策因果、数值参数、端到端流程、接口契约 | "为什么用 X 模型而不是 Y" |
-
-### S/A/B/C 四级质量标准
-
-| 级别 | 适用对象 | 硬指标 |
-|------|---------|--------|
-| **S 级**（核心技术系统） | 用户直接负责的核心业务系统 | >=3 设计决策因果 + >=5 数值参数 + >=1 端到端流程 + >=2 接口契约 + >=3000字 |
-| **A 级**（项目/业务系统） | 重要项目或业务系统 | 前 4 项硬指标 |
-| **B 级**（产品/方案类） | 产品原型、数据网关等 | >=2 设计决策 + >=1 业务流程 + >=1500字 |
-| **C 级**（小型/支撑项目） | 小型方案、外围支撑项目 | >=1 设计决策 + >=1500字 |
-
-### 关键原则
+## 关键原则
 
 - **粒度原则**：一个子系统 ≠ 一篇文章。S 级系统（50-70 源文件）→ 5-6 篇深度文章 → 2-3 万字
-- **双层结构**：深度文章是"理解层"（LLM 融合），原始文档是"参考层"（保留不替换）
-- **多 Agent 圆桌讨论**：写作前通过知识架构师+领域专家+执行专家+质量门神四方讨论确定方案
+- **双层结构**：深度文章是「理解层」（LLM 融合），原始文档是「参考层」（保留不替换）
+- **增量更新**：智能检测新文件，仅处理变化部分，避免重复运行
 
 ---
 
-## Skill 矩阵
+## Next Step
 
-| Skill | 类型 | 功能 |
-|-------|------|------|
-| **knowledge-cleanup** | 查重清理 | 五轮递进式文件去重（MD5→版本链→归一化→压缩包→目录重组） |
-| **everything-markdown** | 格式转换 | 15+ 格式→Markdown（PDF/DOCX/PPTX/XLSX/图片/音频/XMind） |
-| **defuddle** | 网页清洗 | 网页→干净 Markdown，去导航/广告/侧栏 |
-| **karpathy-llm-wiki** | LLM 理解 | 语义分析、内容融合、智能分类 |
-| **multi-agent-discuss** | 圆桌讨论 | 深度知识写作前的方案设计（Phase 3B 前置步骤） |
-| **obsidian-markdown** | Obsidian 格式 | Wikilinks/Callouts/Frontmatter 增强 |
-| **obsidian-bases** | 数据库视图 | 多视图浏览（表格/卡片/列表） |
-| **json-canvas** | 知识图谱 | 交互式知识关系可视化 |
-| **obsidian-cli** | CLI 工具 | Obsidian 批量管理 |
+原始材料太多重复？先清理 → [**knowledge-cleanup**](https://github.com/CS-Faith/knowledge-cleanup) 五轮递进去重后再上流水线
+
+想让历史 AI 会话也参与知识创造？ → [**Conversation Council**](https://github.com/CS-Faith/conversation-council) 多视角讨论加入知识融合
 
 ---
 
-## 快速开始
+## License
+MIT © 2026 [CS-Faith](https://cs-faith.github.io)
 
-### 前置要求
-- Python 3.8+ / Node.js / Obsidian（可选）/ LLM API（用于 Phase 3B）
+<details>
+<summary>English Version</summary>
 
-### 安装
-```bash
-git clone https://github.com/CS-Faith/llm-wiki-pipeline.git
-cd llm-wiki-pipeline
-pip install "markitdown[pdf,docx,xlsx,pptx]>=0.1.5"
-npm install -g defuddle
-```
+**LLM Wiki Pipeline** transforms messy files into a structured 70%-density Obsidian knowledge graph.
 
----
+Raw documents don't become knowledge on their own. Dataview queries notes — it doesn't write them. Wiki Pipeline writes deep articles (20k-30k chars per system) with design rationale, parameter tradeoffs, and contract specifications.
 
-## 许可证
-MIT License
-
-## Next step
-
-Need to declutter first? → [knowledge-cleanup](https://github.com/CS-Faith/knowledge-cleanup)
-
-Multi-perspective AI discussions from chat history? → [conversation-council](https://github.com/CS-Faith/conversation-council)
-
----
-
-## 相关项目
-
-| 项目 | 描述 | 链接 |
-|------|------|------|
-| **reasonix-portakit** | 便携工具箱 | [CS-Faith/reasonix-portakit](https://github.com/CS-Faith/reasonix-portakit) |
-| **knowledge-cleanup** | 知识库查重清理 | [CS-Faith/knowledge-cleanup](https://github.com/CS-Faith/knowledge-cleanup) |
+### Architecture
+- Phase 1: Dedup (5 progressive rounds)
+- Phase 2: Ingestion + format unification
+- Phase 3A: Quick coverage overview
+- Phase 3B: Deep knowledge via multi-agent roundtable
+- Phase 4: Obsidian enhancement
+- Phase 5: Continuous incremental maintenance
+</details>

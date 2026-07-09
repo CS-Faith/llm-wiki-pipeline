@@ -1,6 +1,6 @@
 ﻿# LLM Wiki Pipeline - 知识工厂
 
-> 你有 50GB 的 PDF、Markdown、网页——它们不会自己变成知识。试过 Dataview 和 Obsidian 原生功能，它们能查询已有的笔记，但不能**理解内容、写出新笔记**。
+> 你有文件堆，它造知识网：一条流水线，把杂乱档案炼成结构化的知识图谱。
 > LLM Wiki Pipeline 把 50GB 原始材料变成 70% 密度的 Obsidian 知识图谱。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -77,7 +77,7 @@ MIT © 2026 [CS-Faith](https://cs-faith.github.io)
 <details>
 <summary>English Version</summary>
 
-**LLM Wiki Pipeline** transforms messy files into a structured 70%-density Obsidian knowledge graph.
+**LLM Wiki Pipeline** — You have a file pile. Pipeline builds a knowledge web — one assembly line, from raw chaos to structured insight.
 
 Raw documents don't become knowledge on their own. Dataview queries notes — it doesn't write them. Wiki Pipeline writes deep articles (20k-30k chars per system) with design rationale, parameter tradeoffs, and contract specifications.
 
